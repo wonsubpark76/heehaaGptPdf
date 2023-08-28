@@ -14,38 +14,39 @@ import os
 from streamlit_extras.buy_me_a_coffee import button
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
 
-# jocodingを自分のIDに変更（buy me a coffee)
-button(username="jocoding", floating=True, width=221)
+# buy me a coffee
+button(username="heehaa", floating=True, width=221)
 
 # Title
-st.title("ChatPDF")
+st.title("Chat PDFs")
 st.write("---")
 
 # OpenAI KEY入力してもらう
-openai_key = st.text_input('OPEN_AI_API_KEY', type="password")
+openai_key = st.text_input('あなたのOPEN AI API KEYを入力してください。', type="password")
 
 # ファイルアップロード
-uploaded_file = st.file_uploader("PDFファイルアップロード!",type=['pdf'])
+uploaded_file = st.file_uploader("PDFファイルアップロードしてください。",type=['pdf'])
 st.write("---")
 
 def pdf_to_document(uploaded_files):
     # 複数のPDFをもらう
-    page=[]
-    for uploaded_file in uploaded_files:
-        temp_dir = tempfile.TemporaryDirectory()
-        temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
-        with open(temp_filepath, "wb") as f:
-            f.write(uploaded_file.getvalue())
-        loader = PyPDFLoader(temp_filepath)
-        page.append(loader.load_and_split())
-    return page
-#    temp_dir = tempfile.TemporaryDirectory()
-#    temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
-#    with open(temp_filepath, "wb") as f:
-#        f.write(uploaded_file.getvalue())
-#    loader = PyPDFLoader(temp_filepath)
-#    pages = loader.load_and_split()
-#    return pages
+#    for uploaded_file in uploaded_files:
+#        temp_dir = tempfile.TemporaryDirectory()
+#        temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
+#        with open(temp_filepath, "wb") as f:
+#            f.write(uploaded_file.getvalue())
+#        loader = PyPDFLoader(temp_filepath)
+#        page.append(loader.load_and_split())
+#    return page
+    temp_dir = tempfile.TemporaryDirectory()
+    temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
+    with open(temp_filepath, "wb") as f:
+        f.write(uploaded_file.getvalue())
+    loader = PyPDFLoader(temp_filepath)
+    pages = loader.load_and_split()
+    return pages
+
+#page=[]
 
 # uploadしたら動く
 if uploaded_file is not None:
@@ -79,11 +80,11 @@ if uploaded_file is not None:
             self.container.markdown(self.text)
 
     #Question
-    st.header("PDFへ質問してみて!!")
-    question = st.text_input('質問を入力してください。')
+    st.header("PDFへ質問してみてください。")
+    question = st.text_input('質問を入力して「質問する」ボタンを押下')
 
     if st.button('質問する'):
-        with st.spinner('答えを探してます。'):
+        with st.spinner('答えを探してます。しばらくお待ちください。'):
             chat_box = st.empty()
             stream_hander = StreamHandler(chat_box)
             llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_key, streaming=True, callbacks=[stream_hander])
