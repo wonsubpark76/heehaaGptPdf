@@ -79,7 +79,7 @@ if uploaded_file is not None:
             self.text+=token
             self.container.markdown(self.text)
 
-    #Question
+    # Question
     st.header("PDFへ質問してみてください。")
     question = st.text_input('質問を入力して「質問する」ボタンを押下')
 
