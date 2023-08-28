@@ -25,32 +25,24 @@ st.write("---")
 openai_key = st.text_input('あなたのOPEN AI API KEYを入力してください。', type="password")
 
 # ファイルアップロード
-uploaded_file = st.file_uploader("PDFファイルアップロードしてください。",type=['pdf'])
+uploaded_files = st.file_uploader("PDFファイルアップロードしてください。",accept_multiple_files=True,type=['pdf'])
 st.write("---")
 
 def pdf_to_document(uploaded_files):
     # 複数のPDFをもらう
-#    for uploaded_file in uploaded_files:
-#        temp_dir = tempfile.TemporaryDirectory()
-#        temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
-#        with open(temp_filepath, "wb") as f:
-#            f.write(uploaded_file.getvalue())
-#        loader = PyPDFLoader(temp_filepath)
-#        page.append(loader.load_and_split())
-#    return page
-    temp_dir = tempfile.TemporaryDirectory()
-    temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
-    with open(temp_filepath, "wb") as f:
-        f.write(uploaded_file.getvalue())
-    loader = PyPDFLoader(temp_filepath)
-    pages = loader.load_and_split()
+    pages=[]
+    for uploaded_file in uploaded_files:
+        temp_dir = tempfile.TemporaryDirectory()
+        temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
+        with open(temp_filepath, "wb") as f:
+            f.write(uploaded_file.getvalue())
+        loader = PyPDFLoader(temp_filepath)
+        pages.append(loader.load_and_split())
     return pages
 
-#page=[]
-
 # uploadしたら動く
-if uploaded_file is not None:
-    pages = pdf_to_document(uploaded_file)
+if uploaded_files is not None:
+    pages = pdf_to_document(uploaded_files)
 
     #Split
     text_splitter = RecursiveCharacterTextSplitter(
