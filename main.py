@@ -28,17 +28,17 @@ openai_key = st.text_input('あなたのOPEN AI API KEYを入力してくださ�
 uploaded_files = st.file_uploader("PDFファイルアップロードしてください。",accept_multiple_files=True,type=['pdf'])
 st.write("---")
 
+# 複数のPDFをもらう
 def pdf_to_document(uploaded_files):
-    # 複数のPDFをもらう
-    pages=[]
+    page=[]
     for uploaded_file in uploaded_files:
         temp_dir = tempfile.TemporaryDirectory()
         temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
         with open(temp_filepath, "wb") as f:
             f.write(uploaded_file.getvalue())
         loader = PyPDFLoader(temp_filepath)
-        pages.append(loader.load_and_split())
-    return pages
+        page.append(loader.load_and_split())
+    return page
 
 # uploadしたら動く
 if uploaded_files is not None:
