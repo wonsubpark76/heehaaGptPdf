@@ -41,7 +41,7 @@ def pdf_to_document(uploaded_files):
     return page
 
 # uploadしたら動く
-if uploaded_files is not None:
+if len(uploaded_files) > 0:
     pages = pdf_to_document(uploaded_files)
 
     #Split
