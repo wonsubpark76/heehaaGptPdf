@@ -27,7 +27,18 @@ st.write("<a href='https://teamladybird.com/%e3%81%9d%e3%81%ae%e4%bb%96%e6%8a%80
 
 st.write("")
 st.write(openai_key)
-# ファイルアップロード
+
+# 複数のPDFをもらう
+def pdf_to_document(uploaded_files):
+    page=[]
+    for uploaded_file in uploaded_files:
+        temp_dir = tempfile.TemporaryDirectory()
+        temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
+        with open(temp_filepath, "wb") as f:
+            f.write(uploaded_file.getvalue())
+        loader = PyPDFLoader(temp_filepath)
+        page.append(loader.load_and_split())
+    return page
 
 if openai_key:
     uploaded_files = st.file_uploader("PDFファイルアップロードしてください。",accept_multiple_files=True,type=['pdf'])
@@ -73,15 +84,3 @@ if openai_key:
                 llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_key, streaming=True, callbacks=[stream_hander])
                 qa_chain = RetrievalQA.from_chain_type(llm,retriever=db.as_retriever())
                 qa_chain({"query": question})
-
-# 複数のPDFをもらう
-def pdf_to_document(uploaded_files):
-    page=[]
-    for uploaded_file in uploaded_files:
-        temp_dir = tempfile.TemporaryDirectory()
-        temp_filepath = os.path.join(temp_dir.name, uploaded_file.name)
-        with open(temp_filepath, "wb") as f:
-            f.write(uploaded_file.getvalue())
-        loader = PyPDFLoader(temp_filepath)
-        page.append(loader.load_and_split())
-    return page
