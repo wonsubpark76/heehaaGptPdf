@@ -20,14 +20,12 @@ button(username="heehaa", floating=True, width=221)
 # Title
 st.title("Chat PDFs")
 st.subheader("PDFファイルをアップロードしてChatで質問する！", divider='rainbow')
-st.write("---")
+st.write("")
 
 # OpenAI KEY入力してもらう
 openai_key = st.text_input('あなたのOpenAI API KEYを入力してください。', type="password")
 st.write("<a href='https://teamladybird.com/%e3%81%9d%e3%81%ae%e4%bb%96%e6%8a%80%e8%a1%93/open-ai%e3%81%aeapi-key%e3%82%92%e4%bd%9c%e3%81%a3%e3%81%a6%e3%81%bf%e3%82%88%e3%81%86/' target='_blank'>OpenAIのAPIキーの取得方法はこちらへ</a>",unsafe_allow_html=True)
-
 st.write("")
-st.write(openai_key)
 
 # 複数のPDFをもらう
 def pdf_to_document(uploaded_files):
