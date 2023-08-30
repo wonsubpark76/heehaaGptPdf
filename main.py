@@ -28,9 +28,51 @@ st.write("<a href='https://teamladybird.com/%e3%81%9d%e3%81%ae%e4%bb%96%e6%8a%80
 st.write("")
 st.write(openai_key)
 # ファイルアップロード
+
 if openai_key:
     uploaded_files = st.file_uploader("PDFファイルアップロードしてください。",accept_multiple_files=True,type=['pdf'])
     st.write("---")
+    # uploadしたら動く
+    if len(uploaded_files) > 0:
+        pages = pdf_to_document(uploaded_files)
+
+        # Split
+        text_splitter = RecursiveCharacterTextSplitter(
+            chunk_size = 300,
+            chunk_overlap  = 20,
+            length_function = len,
+            is_separator_regex = False,
+        )
+        texts = text_splitter.split_documents(pages)
+
+        # Embedding
+        embeddings_model = OpenAIEmbeddings(openai_api_key=openai_key)
+
+        # load it into Chroma
+        # from_documentsのパラメータを追加するとDBから取得することも可能
+        db = Chroma.from_documents(texts, embeddings_model)
+
+        # Stream をもらう Hander 作成
+        from langchain.callbacks.base import BaseCallbackHandler
+        class StreamHandler(BaseCallbackHandler):
+            def __init__(self, container, initial_text=""):
+                self.container = container
+                self.text=initial_text
+            def on_llm_new_token(self, token: str, **kwargs) -> None:
+                self.text+=token
+                self.container.markdown(self.text)
+
+        # Question
+        st.header("PDFへ質問してみてください。")
+        question = st.text_input('質問を入力して「質問する」ボタンを押下')
+
+        if st.button('質問する'):
+            with st.spinner('答えを探してます。しばらくお待ちください。'):
+                chat_box = st.empty()
+                stream_hander = StreamHandler(chat_box)
+                llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_key, streaming=True, callbacks=[stream_hander])
+                qa_chain = RetrievalQA.from_chain_type(llm,retriever=db.as_retriever())
+                qa_chain({"query": question})
 
 # 複数のPDFをもらう
 def pdf_to_document(uploaded_files):
@@ -43,46 +85,3 @@ def pdf_to_document(uploaded_files):
         loader = PyPDFLoader(temp_filepath)
         page.append(loader.load_and_split())
     return page
-
-# uploadしたら動く
-if len(uploaded_files) > 0:
-    pages = pdf_to_document(uploaded_files)
-
-    #Split
-    text_splitter = RecursiveCharacterTextSplitter(
-        # Set a really small chunk size, just to show.
-        chunk_size = 300,
-        chunk_overlap  = 20,
-        length_function = len,
-        is_separator_regex = False,
-    )
-    texts = text_splitter.split_documents(pages)
-
-    #Embedding
-    embeddings_model = OpenAIEmbeddings(openai_api_key=openai_key)
-
-    # load it into Chroma
-    # from_documentsのパラメータを追加するとDBから取得することも可能
-    db = Chroma.from_documents(texts, embeddings_model)
-
-    # Stream をもらう Hander 作成
-    from langchain.callbacks.base import BaseCallbackHandler
-    class StreamHandler(BaseCallbackHandler):
-        def __init__(self, container, initial_text=""):
-            self.container = container
-            self.text=initial_text
-        def on_llm_new_token(self, token: str, **kwargs) -> None:
-            self.text+=token
-            self.container.markdown(self.text)
-
-    # Question
-    st.header("PDFへ質問してみてください。")
-    question = st.text_input('質問を入力して「質問する」ボタンを押下')
-
-    if st.button('質問する'):
-        with st.spinner('答えを探してます。しばらくお待ちください。'):
-            chat_box = st.empty()
-            stream_hander = StreamHandler(chat_box)
-            llm = ChatOpenAI(model_name="gpt-3.5-turbo", temperature=0, openai_api_key=openai_key, streaming=True, callbacks=[stream_hander])
-            qa_chain = RetrievalQA.from_chain_type(llm,retriever=db.as_retriever())
-            qa_chain({"query": question})
