@@ -19,6 +19,7 @@ button(username="heehaa", floating=True, width=221)
 
 # Title
 st.title("Chat PDFs")
+st.subheader("PDFファイルをアップロードしてChatで質問する！", divider='rainbow')
 st.write("---")
 
 # OpenAI KEY入力してもらう
