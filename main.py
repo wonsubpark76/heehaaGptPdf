@@ -53,6 +53,7 @@ if openai_key:
             length_function = len,
             is_separator_regex = False,
         )
+        st.write(pages)
         texts = text_splitter.split_documents(pages)
 
         # Embedding
