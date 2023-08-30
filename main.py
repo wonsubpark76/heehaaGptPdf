@@ -53,9 +53,10 @@ if openai_key:
             length_function = len,
             is_separator_regex = False,
         )
-        st.write(pages)
+        
         texts = []
         for p in pages:
+            st.write(p)
             texts.append(text_splitter.split_documents(p))
         #texts = text_splitter.split_documents(pages)
 
