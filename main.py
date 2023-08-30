@@ -54,8 +54,9 @@ if openai_key:
             is_separator_regex = False,
         )
         st.write(pages)
+        texts = []
         for p in pages:
-            texts = texts + text_splitter.split_documents(p)
+            texts.append(text_splitter.split_documents(p))
         #texts = text_splitter.split_documents(pages)
 
         # Embedding
