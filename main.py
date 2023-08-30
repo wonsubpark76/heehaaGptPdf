@@ -22,13 +22,13 @@ st.title("Chat PDFs")
 st.write("---")
 
 # OpenAI KEY入力してもらう
-openai_key = st.text_input('あなたのOPEN AI API KEYを入力してください。', type="password")
+openai_key = st.text_input('あなたのOpenAI API KEYを入力してください。', type="password")
 st.write("<a href='https://teamladybird.com/%e3%81%9d%e3%81%ae%e4%bb%96%e6%8a%80%e8%a1%93/open-ai%e3%81%aeapi-key%e3%82%92%e4%bd%9c%e3%81%a3%e3%81%a6%e3%81%bf%e3%82%88%e3%81%86/' target='_blank'>OpenAIのAPIキーの取得方法はこちらへ</a>",unsafe_allow_html=True)
 
-# https://teamladybird.com/%e3%81%9d%e3%81%ae%e4%bb%96%e6%8a%80%e8%a1%93/open-ai%e3%81%aeapi-key%e3%82%92%e4%bd%9c%e3%81%a3%e3%81%a6%e3%81%bf%e3%82%88%e3%81%86/
-
+st.write("")
+st.write(openai_key)
 # ファイルアップロード
-if openai_key is not None:
+if openai_key:
     uploaded_files = st.file_uploader("PDFファイルアップロードしてください。",accept_multiple_files=True,type=['pdf'])
     st.write("---")
 
