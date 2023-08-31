@@ -55,7 +55,7 @@ if openai_key:
         )
         
         texts = []
-        text = ''
+        text = []
         for p in pages:
             texts.append(text_splitter.split_documents(p))
             text = text + text_splitter.split_documents(p)
