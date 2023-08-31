@@ -56,8 +56,6 @@ if openai_key:
         
         texts = []
         for p in pages:
-            st.write("for文")
-            st.write(p)
             texts.append(text_splitter.split_documents(p))
         #texts = text_splitter.split_documents(pages)
 
