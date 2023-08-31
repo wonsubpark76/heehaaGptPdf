@@ -55,9 +55,10 @@ if openai_key:
         )
         
         texts = []
+        test = ''
         for p in pages:
             texts.append(text_splitter.split_documents(p))
-            text =+ text_splitter.split_documents(p)
+            text = text + text_splitter.split_documents(p)
         #texts = text_splitter.split_documents(pages)
 
         st.write("for文完了")
