@@ -57,10 +57,14 @@ if openai_key:
         texts = []
         for p in pages:
             texts.append(text_splitter.split_documents(p))
+            text =+ text_splitter.split_documents(p)
         #texts = text_splitter.split_documents(pages)
 
         st.write("for文完了")
         st.write(texts)
+
+        st.write("text中身")
+        st.write(text)
 
         # Embedding
         embeddings_model = OpenAIEmbeddings(openai_api_key=openai_key)
