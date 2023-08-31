@@ -59,6 +59,7 @@ if openai_key:
             st.write(p)
             texts.append(text_splitter.split_documents(p))
         #texts = text_splitter.split_documents(pages)
+        st.write(texts)
 
         # Embedding
         embeddings_model = OpenAIEmbeddings(openai_api_key=openai_key)
