@@ -13,6 +13,7 @@ import tempfile
 import os
 from streamlit_extras.buy_me_a_coffee import button
 from langchain.callbacks.streaming_stdout import StreamingStdOutCallbackHandler
+import openai
 
 # buy me a coffee
 button(username="heehaa", floating=True, width=221)
@@ -27,6 +28,18 @@ openai_key = st.text_input('あなたのOpenAI API KEYを入力してくださ�
 st.write("<a href='https://teamladybird.com/%e3%81%9d%e3%81%ae%e4%bb%96%e6%8a%80%e8%a1%93/open-ai%e3%81%aeapi-key%e3%82%92%e4%bd%9c%e3%81%a3%e3%81%a6%e3%81%bf%e3%82%88%e3%81%86/' target='_blank'>OpenAIのAPIキーの取得方法はこちらへ</a>",unsafe_allow_html=True)
 st.write("")
 
+openai.api_key = openai_key
+is_openai_key = True
+
+try:
+    response = openai.Completion.create(
+        engine="davinci",
+        prompt="This is a test prompt.",
+        max_tokens=5
+    )
+except Exception as e:
+    is_openai_key = False
+
 # 複数のPDFをもらう
 def pdf_to_document(uploaded_files):
     page=[]
@@ -39,7 +52,7 @@ def pdf_to_document(uploaded_files):
         page.append(loader.load_and_split())
     return page
 
-if openai_key:
+if is_openai_key == True:
     uploaded_files = st.file_uploader("PDFファイルアップロードしてください。",accept_multiple_files=True,type=['pdf'])
     st.write("---")
     # uploadしたら動く
