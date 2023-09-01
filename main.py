@@ -31,15 +31,16 @@ st.write("")
 openai.api_key = openai_key
 is_openai_key = True
 
-try:
-    response = openai.Completion.create(
-        engine="davinci",
-        prompt="This is a test prompt.",
-        max_tokens=5
-    )
-except Exception as e:
-    is_openai_key = False
-    st.write("OpenAIのAPI KEYが正しくありません。もう一度ご確認して入力してください。")
+if openai_key:
+    try:
+        response = openai.Completion.create(
+            engine="davinci",
+            prompt="This is a test prompt.",
+            max_tokens=5
+        )
+    except Exception as e:
+        is_openai_key = False
+        st.write("OpenAIのAPI KEYが正しくありません。もう一度ご確認して入力してください。")
 
 # 複数のPDFをもらう
 def pdf_to_document(uploaded_files):
