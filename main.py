@@ -40,7 +40,7 @@ if openai_key:
         )
         is_openai_key = True
     except Exception as e:
-        st.write("OpenAIのAPI KEYが正しくありません。もう一度ご確認して入力してください。")
+        st.write(":red[OpenAIのAPI KEYが正しくありません。もう一度ご確認して入力してください。]")
 
 # 複数のPDFをもらう
 def pdf_to_document(uploaded_files):
